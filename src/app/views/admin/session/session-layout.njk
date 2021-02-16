@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block head %}
+
+            <title>Foodfy</title>
+
+        {% endblock %}
+
+        <link rel="shortcut icon" href="/img/admin-img/favicon.ico" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/styles/admin.css"> 
+        <link rel="stylesheet" href="/styles/chef-admin.css"> 
+        <link rel="stylesheet" href="/styles/recipe-admin.css">
+        <link rel="stylesheet" href="/styles/user-admin.css"> 
+        <link rel="stylesheet" href="/styles/session-admin.css">
+        <link rel="stylesheet" href="/styles/messages.css"> 
+
+    </head>
+
+    <body>
+        <div class="admin">
+
+            {% include "parts/messages.njk" %}
+
+            <header>    
+                <div class="session-container"> 
+                
+                    <div class="logo">
+                        <a href="/">
+                            <img src="/img/admin-img/logo.png" alt="logo-foodfy">
+                        </a>
+                    </div>
+            
+                </div>
+            </header>
+
+            {% block content %}{% endblock %}
+
+        </div>
+
+    </body>
+
+</html>

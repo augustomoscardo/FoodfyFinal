@@ -1,0 +1,50 @@
+{% set pageName = "users" %}
+{% extends "admin/layout.njk" %}
+
+{% block head %}
+    
+    <title>Foodfy - Editando Usuário</title>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="user-edit container form">
+        
+            <form id="post" action="/admin/users?_method=PUT" method="post">
+                <input type="hidden" name="id" value="{{ user.id }}">
+
+                <div class="form-header">
+                    <h2>Atualizar Usuário</h2>
+                    
+                    <div class="form-header-btn">
+                        <button type="submit" class="delete" form="form-delete">Deletar</button>
+
+                        
+                        <button type="submit" form="post">Salvar</button>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    {% include 'admin/users/fields.njk' %}
+                </div>  
+
+            </form>
+
+            <form id= "form-delete" action="/admin/users?_method=DELETE" method="post">
+                <input type="hidden" name="id" value="{{ user.id }}">
+            </form>
+        
+    </section>
+
+    <script>
+        const formDelete = document.querySelector("#form-delete")
+        formDelete.addEventListener("submit", function(event) {
+            const confirmation = confirm("Deseja deletar?")
+            if(!confirmation) {
+                event.preventDefault()
+            }
+        })
+    </script>
+
+{% endblock content %}

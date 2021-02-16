@@ -1,0 +1,68 @@
+{% set pageName = "users" %}
+{% extends "admin/layout.njk" %}
+
+{% block head %}
+    
+    <title>Foodfy - Página de {{ user.name }}</title>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="user-profile container form">
+            <form id="post" action="/admin/profile?_method=PUT" method="post">
+
+                <div class="form-header">
+                    <h2>Bem Vindo {{user.name}}</h2>
+                    
+                    <button type="submit" class="button">Salvar</button>
+                </div>
+
+                <div class="fields">
+                    <div class="items_input_text">
+                        <div class="item">
+                            <div>Nome</div>
+                            <input 
+                                type="text"
+                                name="name"  
+                                value="{{ user.name }}"
+                                placeholder="Digite o nome completo"
+                            >
+                        </div>
+
+                        <div class="item">
+                            <div>Email</div>
+                            <input 
+                                type="text"
+                                name="email"  
+                                value="{{ user.email }}"
+                                placeholder="Digite o email"
+                                onblur="Validate.apply(this, 'isEmail')"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="password_input">
+                            <div>Senha</div>
+                            <input 
+                                type="password"
+                                name="password"  
+                                placeholder="Digite a sua senha"
+                            >
+                        </div>                       
+                    </div>
+
+                    <input 
+                        type="hidden" 
+                        name="id"
+                        value="{{ user.id }}"
+                    >
+                </div>
+
+            </form>
+    </section>
+
+<script src="/js/validate.js"></script>
+
+{% endblock content %}

@@ -1,0 +1,73 @@
+/* === LOGIN === */
+
+/* HEADER */
+.admin header {
+    background: white;
+    padding: 35px 0 0;
+    margin-bottom: 150px;
+}
+
+.admin header .session-container {
+    display: flex;
+    justify-content: center;
+}
+
+.admin header .session-container .logo {
+    justify-content: center;
+}
+
+/* FORM */
+section.login.container,
+section.password.container {
+    max-width: 500px;
+    width: 100%;
+
+    margin: 0 auto;
+}
+
+section.login.container .page-header,
+section.password.container .page-header {
+    justify-content: center;
+}
+
+section.login.container .fields {
+    margin-bottom: 35px;
+}
+
+section.login.container .footer ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section.login.container .footer ul li {
+    list-style: none;
+
+}
+
+section.login.container .footer ul li a {
+    font-size: 16px;
+    color: #969696;
+    text-decoration: none;
+    font-weight: bold;
+
+    transition: 400ms;
+}
+
+section.login.container .footer ul li a:hover {
+    color: #6558C3;
+}
+
+section.password.container .footer {
+    margin-top: 35px;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+.input .error {
+    background-color: #e74c3c;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
+}

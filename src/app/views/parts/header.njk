@@ -1,0 +1,26 @@
+<header>
+
+    <div class="header-container">
+
+        <div class="logo">
+            <a href="/admin/recipes">
+                <img src="/img/admin-img/logo-white.png" alt="logo-white">
+            </a>
+        </div>
+
+        <div class="links ">
+            <a href="/admin/recipes" {% if pageName == 'recipes' %} class="active" {% endif %}>Receitas</a>
+            <a href="/admin/chefs" {% if pageName == 'chefs' %} class="active" {% endif %}>Chefs</a>
+            {% if session.isAdmin %}
+            <a href="/admin/users/" {% if pageName == 'users' %} class="active" {% endif %}>Usuários</a>
+            {% endif %}
+            <a href="/admin/profile/" {% if pageName == 'profile' %} class="active" {% endif %}>Conta</a>
+            
+            <form action="/admin/users/logout" method="POST">
+                <button>Sair</button>
+            </form>
+        </div>
+
+    </div>
+
+</header>

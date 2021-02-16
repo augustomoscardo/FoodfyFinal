@@ -1,0 +1,61 @@
+{% set pageName = "users" %}
+{% extends "admin/layout.njk" %}
+
+{% block head %}
+    
+    <title>Foodfy - Usuários</title>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="user-index container">
+        <div class="page-header"> 
+            <h2>Usuários</h2>
+            {% if session.isAdmin %}
+                <a href="/admin/users/register" class="btn">Novo</a>
+            {% endif %}
+        </div>
+
+        <div class="users">
+            {% for user in users %}    
+                <div class="user" id="{{user.id}}">
+                    <div class="user_content">
+                        <div class="user_name">
+                            <p>{{user.name}}</p>
+                        </div>
+                        
+                        <div class="user_email">
+                            <p>{{user.email}}</p>
+                        </div>
+
+                        <div class="buttons">
+                            
+                            {% if session.isAdmin %}
+                                <a href="/admin/users/{{user.id}}/edit">Editar</a>
+                            {# {% else %}
+                                <a href="/admin/profile/{{index}}">Editar</a> #}
+                            {% endif %}
+                                <form id="form-delete" action="/admin/users?_method=DELETE" method="post">
+                                    <input type="hidden" name="id" value="{{user.id}}">
+                                    <button type="submit">Remover</button>
+                                </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        const formDelete = document.querySelector("#form-delete")
+        formDelete.addEventListener("submit", function(event) {
+            const confirmation = confirm("Deseja deletar?")
+            if(!confirmation) {
+                event.preventDefault()
+            }
+        })
+    </script>
+
+{% endblock content %}
