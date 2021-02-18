@@ -186,13 +186,7 @@ module.exports = {
                     console.error(error);
                 }
             })
-
-            // delete recipe by recipe_id and delete files by file_id from RecipeFile reference
-            await Promise.all(recipeFiles.rows.map(async recipeFile => {
-                await Recipe.delete(recipeFile.recipe_id)
-                await File.delete(recipeFile.file_id)
-            }))  
-
+            
             return res.redirect(`/admin/recipes`)
 
         } catch (error) {
