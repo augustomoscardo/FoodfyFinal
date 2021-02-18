@@ -1,10 +1,10 @@
 const Recipe = require('../models/Recipe')
+const Chef = require('../models/Chef')
 
 
 async function post(req, res, next) {
     try {
-        let results = await Recipe.chefsSelectOptions()
-        const chefOptions = results.rows 
+        const chefsSelectOptions = Chef.findAll()
 
         const keys = Object.keys(req.body)
 
@@ -12,7 +12,7 @@ async function post(req, res, next) {
             if (req.body[key] == "") {
                 return res.render('admin/recipes/create', {
                     recipe: req.body,
-                    chefOptions,
+                    chefsSelectOptions,
                     error: 'Por favor, preencha todos os campos'
                 })
             }
@@ -21,7 +21,7 @@ async function post(req, res, next) {
         if (!req.files || req.files.length == 0) 
             return res.render('admin/recipes/create', {
                 recipe: req.body,
-                chefOptions,
+                chefsSelectOptions,
                 error: "Por favor envie pelo menos uma imagem."
             })
 
@@ -33,8 +33,7 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        let results = await Recipe.chefsSelectOptions()
-        const chefOptions = results.rows
+        const chefsSelectOptions = Chef.findAll()
 
         const keys = Object.keys(req.body)
 
@@ -42,7 +41,7 @@ async function update(req, res, next) {
             if (req.body[key] == "" && key != "removed_files") {
                 return res.render('admin/recipes/edit', {
                     recipe: req.body,
-                    chefOptions,
+                    chefsSelectOptions,
                     error: 'Por favor, preencha todos os campos'
                 })
             }

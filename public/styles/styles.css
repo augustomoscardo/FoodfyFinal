@@ -374,9 +374,12 @@ footer p{
     font-weight: bold;
 }
 
+
+
 .topic h2 {  
     font-size: 24px;
     line-height: 28px;
+
     margin-top: 50px;
     margin-right: 8px;
 }
@@ -389,7 +392,7 @@ footer p{
     cursor: pointer;
 }
 
-.recipes ul {
+.recipe .content ul.instructions {
     font-size: 18px;
     line-height: 28px;
     margin-top: 20px;

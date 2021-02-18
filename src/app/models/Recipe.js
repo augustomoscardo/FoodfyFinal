@@ -1,5 +1,3 @@
-const { date } = require('../../lib/utils')
-const fs = require('fs')
 const db = require('../../config/db')
 
 const Base = require('./Base')
@@ -23,23 +21,20 @@ module.exports = {
     },
     async search({ filter }) {
 
-        let query = "",
-        filterQuery = `WHERE`
-
-        filterQuery = `${filterQuery}
-            recipes.title ILIKE '%${filter}%'
-            OR chefs.name ILIKE '%${filter}%'
-            ORDER BY updated_at DESC
-        `
-
-        query = `
+        let query = `
             SELECT recipes.*, chefs.name AS chef_name
             FROM recipes
-            LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-            ${filterQuery}
+            LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
+            WHERE 1 = 1
         `
+
+        if (filter) {
+            query += ` AND (recipes.title ILIKE '%${filter}%')
+            OR chefs.name ILIKE '%${filter}%'`
+        }
         
-        const results = db.query(query)
+        const results = await db.query(query)
+        
         return results.rows
     },
 }

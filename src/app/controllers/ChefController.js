@@ -3,7 +3,6 @@ const { unlinkSync} = require('fs')
 
 const Chef = require('../models/Chef')
 const File = require('../models/File')
-const RecipeFile = require('../models/RecipeFile')
 const Recipe = require('../models/Recipe')
 
 const LoadChefService = require('../services/LoadChefService')
@@ -13,8 +12,6 @@ module.exports = {
     async index(req, res) {
 
         try {
-            // const chefs = await LoadChefService.load('chefs')
-
             let { page, limit } = req.query
 
             page = page || 1
@@ -39,24 +36,7 @@ module.exports = {
                 total: Math.ceil(chefs[0].total/limit),
                 page
             }
-
-
-            // let results = await Chef.all()
-            // const chefs = results.rows
-
-
-            // const chefWithImage = await Promise.all(chefs.map( async chef => {
-            //     const fileResults = await Chef.find(chef.id) // trazendo os chefs
-            //     const fileId = fileResults.rows[0].file_id // pegando o id da imagem dentro de chef
-                
-            //     const imageResults = await File.find(fileId) // trazendo as imagens 
-            //     const image = imageResults.rows[0].path // acessando a propriedade path das imagens
-
-            //     return {
-            //         ...chef,
-            //         image: `${req.protocol}://${req.headers.host}${image.replace("public", "")}`
-            //     }
-            // }))
+            
             return res.render('admin/chefs/index', { chefs, pagination })
 
         } catch (error) {

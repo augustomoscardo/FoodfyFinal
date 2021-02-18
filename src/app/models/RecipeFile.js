@@ -1,3 +1,5 @@
+// EXCLUIR ESSE ARQUIVO
+
 const { date } = require('../../lib/utils')
 
 const db = require('../../config/db')

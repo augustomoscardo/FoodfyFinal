@@ -11,9 +11,6 @@ module.exports = {
     async index(req, res) {
 
         try {
-            // const recipes = await LoadRecipeService.load('recipes')
-            // console.log(recipes);
-
             let { page, limit } = req.query
 
             page = page || 1
@@ -37,28 +34,6 @@ module.exports = {
                 page
             }
             
-            // const recipesResults = await Recipe.all()
-            // const recipes = recipesResults.rows
-
-            // if (!recipes) return res.send('Recipes not found!')
-
-            // async function getImage(recipe_id) {
-            //     const fileResults = await RecipeFile.findRecipeId(recipe_id)   
-            //     const fileId = fileResults.rows[0].file_id
-            //     const imageResults = await File.find(fileId)
-            //     const image = imageResults.rows.map(image => `${req.protocol}://${req.headers.host}${image.path.replace("public", "")}`)
-
-            //     return image[0]
-            // }
-
-            // const recipesPromise = recipes.map(async recipe => {
-            //     recipe.image = await getImage(recipe.id)
-
-            //     return recipe
-            // })
-
-            // const lastAdded = await Promise.all(recipesPromise)
-            
             return res.render('admin/recipes/index', { recipes, pagination })
             
         } catch (error) {
@@ -81,12 +56,12 @@ module.exports = {
     async post(req, res) {
 
         try {
-            const { title, chef, ingredients, preparation, information } = req.body
+            const { title, chef_id, ingredients, preparation, information } = req.body
 
             // create recipe
             const recipe = await Recipe.create({
                 title,
-                chef,
+                chef_id,
                 user_id: req.session.userId,
                 ingredients,
                 preparation,
@@ -97,19 +72,13 @@ module.exports = {
             // create files
             let files;
 
-            const filesPromise = req.files.map(file => File.createRecipefiles({
+            const filesPromise = req.files.map(file => File.createRecipeFiles({
                 name: file.filename,
                 path: file.path,
                 recipe_id: recipe
             }))
 
             files = await Promise.all(filesPromise)
-
-            // const filesResults = await Promise.all(req.files.map(file => File.create(file)))  //mapeando cada arquivo para operar o File.create
-            // const files = filesResults.map(result => result.rows[0]) //para cada results do File.create, mapear cada um acessando o rows[0] (que é o id do File que criei)
-
-            // // unite recipe and files
-            // files.map(file => RecipeFile.create({ recipe_id: recipe.id, file_id: file.id  })) // 
 
             return res.redirect(`/admin/recipes/${recipe.id}`)
         } catch (error) {
@@ -120,25 +89,6 @@ module.exports = {
 
         try {
             const recipe = await LoadRecipeService.load("recipe", { where: { id: req.params.id }})
-
-
-
-            // const recipeResults = await Recipe.find(req.params.id)
-
-            // const recipe = recipeResults.rows[0]
-
-            // if (!recipe) return res.send('Recipe not found!')
-          
-            // // get images
-            // const results = await RecipeFile.findRecipeId(req.params.id)
-            // const recipeFilesPromise = await Promise.all(results.rows.map(file => File.find(file.file_id)))
-            // // console.log(JSON.stringify(recipeFilesPromise));
-
-            // let recipeFiles = recipeFilesPromise.map(result => result.rows[0])
-            // recipeFiles = recipeFiles.map(file => ({
-            //     ...file,
-            //     src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
-            // }))
 
             return res.render('admin/recipes/show', { recipe })
         } catch (error) {
@@ -152,28 +102,6 @@ module.exports = {
 
             // get chefs
             const chefsSelectOptions = await Chef.findAll()
-
-
-
-
-            // let results = await Recipe.find(req.params.id)
-
-            // const recipe = results.rows[0]
-
-            // if (!recipe) return res.send('Recipe not found!')
-
-            // // get chefs
-            // results = await Recipe.chefsSelectOptions() 
-
-            // const chefOptions = results.rows
-
-            // // get images
-            // results = await RecipeFile.files(req.params.id)
-            // let files = results.rows
-            // files = files.map(file => ({
-            //     ...file,
-            //     src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
-            // }))
 
             return res.render('admin/recipes/edit', { recipe, chefsSelectOptions })
 
@@ -250,7 +178,7 @@ module.exports = {
             // delete recipe
             await Recipe.delete(req.body.id)
             // remove files from 'public'
-            files.map(file => {
+            files.map(async file => {
                 try {
                     unlinkSync(file.path)
                     await File.delete(file.file_id)        
