@@ -1,8 +1,7 @@
 const Recipe = require('../models/Recipe')
 
 async function checkCredential(req, res, next) {
-    const recipeResults = await Recipe.find(req.params.id)
-    const recipe = recipeResults.rows[0]
+    const recipe = await Recipe.findOne({ where: { id: req.params.id }})
     console.log(recipe);
 
     console.log(req.session);

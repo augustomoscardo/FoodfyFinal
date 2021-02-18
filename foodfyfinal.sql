@@ -1,6 +1,31 @@
 DROP DATABASE IF EXISTS FoodfyFinal;
 CREATE DATABASE FoodfyFinal;
 
+CREATE TABLE "users" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "email" TEXT UNIQUE NOT NULL,
+  "password" TEXT NOT NULL,
+  "reset_token" TEXT,
+  "reset_token_expires" TEXT,
+  "is_admin" BOOLEAN DEFAULT false,
+  "created_at" timestamp DEFAULT(now()),
+  "updated_at" timestamp DEFAULT(now())
+);
+
+CREATE TABLE "files" (
+  "id" SERIAL PRIMARY KEY,
+  "name" text NOT NULL,
+  "path" text NOT NULL
+);
+
+CREATE TABLE "chefs" (
+  "id" SERIAL PRIMARY KEY,
+  "name" text NOT NULL,
+  "file_id" INTEGER NOT NULL REFERENCES "files" (id),
+  "created_at" timestamp DEFAULT (now())
+);
+
 CREATE TABLE "recipes" (
   "id" SERIAL PRIMARY KEY,
   "chef_id" INTEGER NOT NULL REFERENCES "chefs" (id),
@@ -13,35 +38,10 @@ CREATE TABLE "recipes" (
   "updated_at" timestamp DEFAULT (now())
 );
 
-CREATE TABLE "chefs" (
-  "id" SERIAL PRIMARY KEY,
-  "name" text NOT NULL,
-  "file_id" INTEGER NOT NULL REFERENCES "files" (id),
-  "created_at" timestamp DEFAULT (now())
-);
-
-CREATE TABLE "files" (
-  "id" SERIAL PRIMARY KEY,
-  "name" text NOT NULL,
-  "path" text NOT NULL
-);
-
 CREATE TABLE "recipe_files" (
   "id" SERIAL PRIMARY KEY,
   "recipe_id" INTEGER REFERENCES "recipes" (id) ON DELETE CASCADE,
   "file_id" INTEGER REFERENCES "files" (id)
-);
-
-CREATE TABLE "users" (
-  "id" SERIAL PRIMARY KEY,
-  "name" TEXT NOT NULL,
-  "email" TEXT UNIQUE NOT NULL,
-  "password" TEXT NOT NULL,
-  "reset_token" TEXT,
-  "reset_token_expires" TEXT,
-  "is_admin" BOOLEAN DEFAULT false,
-  "created_at" timestamp DEFAULT(now()),
-  "updated_at" timestamp DEFAULT(now())
 );
 
 -- foreign key for recipes - chefs

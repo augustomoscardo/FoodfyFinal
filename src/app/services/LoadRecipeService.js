@@ -1,23 +1,57 @@
 const Recipe = require('../models/Recipe')
 const Chef = require('../models/Chef')
-const recipe = require('../validators/recipe')
 
+async function getImages(recipeId) {
+    let files = await Recipe.files(recipeId)
+    files.map(file => ({
+        id: file.file_id,
+        name: file.name,
+        src: `${file.path.replace("public", "")}`
+    }))
 
+    return files
+}
 
+async function format(recipe) {
+    const chef = await Chef.findOne({ where: { id: recipe.chef_id }})
+// console.log(chef);
+    const files = await getImages(recipe.id)
 
+    recipe.image = files[0].src
+    recipe.files = files
+    recipe.chef_name = chef.name
+// console.log(files);
+    return recipe
+}
 
 const LoadService = {
-    load(service, filte) {
-        this.filter
+    load(service, filter) {
+        this.filter = filter
+        
         return this[service]()
     },
     async recipe() {
-        const recipeResults = await Recipe.find(req.params.id)
+        try {
+            const recipe = await Recipe.findOne(this.filter)
 
-        const recipe = recipeResults.rows[0]
+            return format(recipe)
+        } catch (error) {
+            console.error(error);
+        }
     },
     async recipes() {
+        try {
+            const recipes = await Recipe.findAll(this.filter)
 
+            const recipesPromise = recipes.map(format)
+
+            return Promise.all(recipesPromise)
+        } catch (error) {
+            console.error(error);
+        }
     },
+    format
 
 }
+
+module.exports = LoadService

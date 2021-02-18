@@ -103,17 +103,17 @@ module.exports = {
     async searchResult(req, res) {
 
         try {
-            const { filter } = req.query
+            let { filter } = req.query
 
-            let recipesResults,
+            let recipes,
                 params = {};
 
             if (!filter) return res.redirect("/home")
 
             params.filter = filter
 
-            recipesResults = await Recipe.search(params)
-            const recipes = recipesResults.rows
+            recipes = await Recipe.search({ filter })
+
             if (!recipes) return res.send('Recipes not found!')
 
             async function getImage(recipe_id) {

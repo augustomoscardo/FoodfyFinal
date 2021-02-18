@@ -1,15 +1,17 @@
 const crypto = require("crypto")
 const { hash } = require("bcryptjs")
 const mailer = require("../../lib/mailer")
+const { unlinkSync } = require('fs')
 
 const User = require('../models/User')
+const Recipe = require('../models/Recipe')
+const File = require('../models/File')
 
 module.exports = {
     async list(req, res) {
 
         try {
-            const results = await User.all()
-            const users = results.rows
+            const users = await User.findAll()
 
             return res.render('admin/users/index', { users })
 
@@ -24,7 +26,6 @@ module.exports = {
     async post(req, res) {
 
         try {            
-            // req.session.userId = user.id // adiciando a chave userId no req.session
 
             const { name, email, is_admin } = req.body
             
@@ -36,8 +37,11 @@ module.exports = {
                 name,
                 email,
                 is_admin: is_admin || false,
-                password: passwordHash
+                password: passwordHash,
+                created_at: date(Date.now()).iso
             })
+
+            req.session.userId = user.id // adiciando a chave userId no req.session
 
             console.log(user);
 
@@ -97,11 +101,35 @@ module.exports = {
             })         
         }
     },
-    async delete(req, res) {
-
+    async delete(req, res) {   
         try {
+            // pegar todas as receitas do usuário
+            const recipesOfUser = await Recipe.findAll({ where: { user_id: req.body.id } })
+
+            // das receitas, pegar todas as receitas
+            const recipesFilesPromise = recipesOfUser.map(recipe => Recipe.files(recipe.id))
+
+            let recipesFiles = await Promise.all(recipesFilesPromise)
+
+            // rodar remoção do usuário
             await User.delete(req.body.id)
-            // req.session.destroy()
+                
+            // remover as imagens da pasta public
+            recipesFiles.map(files => {
+                files.map(file => {
+                    try {
+                        unlinkSync(file.path)
+
+                        File.init({ table: "files"})
+
+                        File.delete("id", file.file_id)
+                    } catch (error) {
+                        console.error(error);
+                    }
+                })
+            })
+
+            await Promise.all(recipesFiles)
 
             return res.render(`admin/users/index`, {
                 success: 'Conta deletada com sucesso'
@@ -114,5 +142,5 @@ module.exports = {
                 error: "Erro ao deletar conta!"
             })   
         }
-    },
+    }
 }

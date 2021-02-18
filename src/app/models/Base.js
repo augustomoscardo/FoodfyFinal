@@ -18,6 +18,7 @@ function find( filters, table) {
 
 const Base = {
     init({table}) {
+
         if (!table) throw new Error('Invalid Params')
 
         this.table = table
@@ -25,15 +26,21 @@ const Base = {
         return this
     },
     async find(id) {
+
         const results = await find({ where: { id } }, this.table)
+
         return results.rows[0]
     },
     async findOne(filters) {
+
         const results = await find(filters, this.table)
+
         return results.rows[0]
     }, 
     async findAll(filters) {
+
         const results = await find(filters, this.table)
+
         return results.rows
     },
     async create(fields) {
@@ -49,7 +56,7 @@ const Base = {
             const query = `INSERT INTO ${this.table} 
                 (${keys.join(',')})
                 VALUES (${values.join(',')})
-                RETURNIN id
+                RETURNING id
             `
 
             const results = await db.query(query)
@@ -82,12 +89,12 @@ const Base = {
     delete(id) {
         return db.query(`DELETE FROM  ${this.table} WHERE id = $1`, [id])
     },
-    async paginate(limit, offset) {
+    async paginate({ limit, offset }) {
         try {
-            let query = `
+            const query = `
                 SELECT ${this.table}.*, (SELECT count(*) FROM ${this.table}) AS total
                 FROM ${this.table}
-                LIMIT ${limit} OFFSET ${ offset}
+                LIMIT ${limit} OFFSET ${offset}
             `
 
             const results = await db.query(query)

@@ -24,7 +24,7 @@
                 {% if not files[0] %}
                     <p>Chef não possui Avatar</p>
                 {% else %}
-                    <img src="{{files[0].src}}" alt="Imagem de {{chef.name}}">
+                    <img src="{{chef.files[0].src}}" alt="Imagem de {{chef.name}}">
                 {% endif %}
             </div>
             <div class="chef-name">
