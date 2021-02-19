@@ -13,8 +13,8 @@
             <i class="material-icons">add</i>
         </div>
         <div id="images-preview">
-            {% if files %}
-                {% for image in files %}
+            {% if recipe.files %}
+                {% for image in recipe.files %}
                     <div class="image" id="{{image.id}}">
                         <img src="{{image.src}}" alt="{{image.name}}">
                         <i 

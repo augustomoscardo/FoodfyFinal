@@ -11,6 +11,7 @@ module.exports = {
     async index(req, res) {
 
         try {
+            
             let { page, limit } = req.query
 
             page = page || 1
@@ -19,18 +20,19 @@ module.exports = {
             let offset = limit * (page - 1)
 
             let recipes = await Recipe.paginate({ limit, offset })
+
             const recipesPromise = recipes.map(LoadRecipeService.format)
 
             recipes = await Promise.all(recipesPromise)
 
-            // if (recipes = "") {
-            //     const pagination = { page }
+            if (recipes === "") {
+                const pagination = { page }
 
-            //     return res.render('admin/recipes/index', { recipes, pagination })
-            // }
+                return res.render('admin/recipes/index', { recipes, pagination })
+            }
 
             const pagination = {
-                total: Math.ceil(recipes[0].total/limit),
+                total: Math.ceil(recipes.length/limit),
                 page
             }
             
@@ -56,19 +58,18 @@ module.exports = {
     async post(req, res) {
 
         try {
-            const { title, chef_id, ingredients, preparation, information } = req.body
-
+            const { title, chef, ingredients, preparation, information } = req.body
+console.log(req.body);
             // create recipe
             const recipe = await Recipe.create({
                 title,
-                chef_id,
+                chef_id: chef,
                 user_id: req.session.userId,
                 ingredients,
                 preparation,
                 information,
                 created_at: date(Date.now()).iso
             })
-
             // create files
             let files;
 
@@ -80,7 +81,7 @@ module.exports = {
 
             files = await Promise.all(filesPromise)
 
-            return res.redirect(`/admin/recipes/${recipe.id}`)
+            return res.redirect(`/admin/recipes/${recipe}`)
         } catch (error) {
             console.error(error)
         }
@@ -89,7 +90,7 @@ module.exports = {
 
         try {
             const recipe = await LoadRecipeService.load("recipe", { where: { id: req.params.id }})
-
+// console.log(recipe);
             return res.render('admin/recipes/show', { recipe })
         } catch (error) {
             console.error(error)
@@ -186,7 +187,7 @@ module.exports = {
                     console.error(error);
                 }
             })
-            
+
             return res.redirect(`/admin/recipes`)
 
         } catch (error) {

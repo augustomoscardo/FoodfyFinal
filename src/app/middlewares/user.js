@@ -1,7 +1,12 @@
 const Recipe = require('../models/Recipe')
 
+const LoadRecipeService = require('../services/LoadRecipeService')
+
 async function checkCredential(req, res, next) {
-    const recipe = await Recipe.findOne({ where: { id: req.params.id }})
+    // const recipe = await Recipe.findOne({ where: { id: req.params.id }})
+
+    const recipe = await LoadRecipeService.load("recipe", { where: { id: req.params.id }})
+
     console.log(recipe);
 
     console.log(req.session);

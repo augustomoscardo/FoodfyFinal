@@ -21,7 +21,7 @@
 
         <div class="chef-header">
             <div class="chef-avatar_url">
-                {% if not files[0] %}
+                {% if not chef.files[0] %}
                     <p>Chef não possui Avatar</p>
                 {% else %}
                     <img src="{{chef.files[0].src}}" alt="Imagem de {{chef.name}}">

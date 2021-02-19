@@ -50,9 +50,19 @@ const Base = {
 
             Object.keys(fields).map(key => {
                 keys.push(key)
+
+                if (fields[key] !== 'file_id' && Array.isArray(fields[key])) {
+                    
+                    const formattedValues = fields[key].map(item => `'${item}'`)
+
+                    //VALUES('chef', ARRAY['123'], '345')
+
+                    return values = [...values, `ARRAY[${formattedValues}]`]
+                }
+
                 values.push(`'${fields[key]}'`)                           
             })
-
+        // console.log(keys, values);
             const query = `INSERT INTO ${this.table} 
                 (${keys.join(',')})
                 VALUES (${values.join(',')})
@@ -60,6 +70,7 @@ const Base = {
             `
 
             const results = await db.query(query)
+
             return results.rows[0].id
 
         } catch (error) {

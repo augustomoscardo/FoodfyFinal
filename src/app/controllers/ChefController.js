@@ -20,20 +20,21 @@ module.exports = {
             let offset = limit * (page - 1)
 
             let chefs = await Chef.paginate({ page, limit, offset })
+            
             const chefsPromise = chefs.map(LoadChefService.format)
 
             chefs = await Promise.all(chefsPromise)
 
-            // if (chefs = "") {
-            //     const pagination = { page }
+            if (chefs === "") {
+                const pagination = { page }
 
-            //     return res.render('admin/chefs/index', { chefs, pagination })
-            // }
+                return res.render('admin/chefs/index', { chefs, pagination })
+            }
 
-            console.log(chefs);
+            // console.log(chefs);
             
             const pagination = {
-                total: Math.ceil(chefs[0].total/limit),
+                total: Math.ceil(chefs.length/limit),
                 page
             }
             
@@ -53,19 +54,19 @@ module.exports = {
         try {
             // Criar a imagem primeiro, pois quando eu crio o chef é nele que eu pego a imagem.
             const files = req.files
-            console.log(files);
-            const fileId = await File.create({
-                name: files[0].filename,
-                path: files[0].path
-            })
-            console.log(fileId);
+            // console.log(files);
+            const fileId = await Promise.all(files.map(file => File.create({
+                name: file.filename,
+                path: file.path
+            })))    
+            // console.log(fileId);
 
             const chef = await Chef.create({
                name: req.body.name,
-               file_id: fileId,
+               file_id: fileId[0],
                created_at: date(Date.now()).iso
             })
-            console.log(chef);
+            // console.log(chef);
             
             return res.redirect(`/admin/chefs/${chef}`)
 
@@ -153,10 +154,14 @@ module.exports = {
 
         try {
             // finding chef
-            const chef = await Chef.findOne({ where: { id }})
+            const chef = await Chef.findOne({ where: { id: req.body.id }})
+            // const chef = await LoadChefService.load("chef", { where: { id: req.params.id }})
 
+
+            console.log({chef});
             // get image of chef
-            const chefFile = await Chef.files(chef.file_id)
+            const chefFile = await Chef.files(chef.id)
+            console.log({chefFile});
 
             // can't delete if chef has recipes registered
             if (chef.totalRecipes >= 1) {
@@ -165,9 +170,9 @@ module.exports = {
             } else {
                 unlinkSync(chefFile[0].path)
                 
-                await Chef.delete(req.body.id)
-
                 await File.delete(chefFile[0].id)
+                
+                await Chef.delete(req.body.id)
 
                 return res.redirect(`/admin/chefs`)
             }

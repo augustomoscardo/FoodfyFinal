@@ -15,13 +15,13 @@ async function getImages(chefId) {
 async function format(chef) {
     const recipes = await Recipe.findAll({ where: { chef_id: chef.id }})
 
-    const files = await getImages(chef.id)
+    const file = await getImages(chef.id)
 
-    chef.img = files[0].src
-    chef.files = files
+    chef.image = file[0].src
+    chef.files = file
     chef.total_recipes = recipes.length
 
-    console.log(files);
+    // console.log(file);
 
     return chef
 }
