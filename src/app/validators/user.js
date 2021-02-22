@@ -79,8 +79,9 @@ async function update(req, res, next) {
 
 async function AdminDeletesOwnAccount(req, res, next) {
     const { userId } = req.session
+console.log(userId);
     const { id } = req.body
-
+console.log(id);
     const user = await User.findOne({ where: { id } })
 
     if (userId == id) {  // verificar se id do user da sessão é igual ao id do user do body

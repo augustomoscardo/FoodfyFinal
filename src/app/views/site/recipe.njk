@@ -27,24 +27,21 @@
 <section class="recipe">
                    
     <div class="content" id="{{recipe.id}}">
-        {# <div class="recipe-image">
-            <img src="{{recipe.image}}" alt="Imagem de {{recipe.title}}">
-        </div> #}
 
         <div class="recipe-image">
             <div class="highlight">
-                {% if not recipeFiles[0] %}
+                {% if not recipe.files[0] %}
                 <img src="http://placehold.it/500x500?text=PRODUTO SEM FOTO" >
                 {% else %}
                     <img 
-                        src="{{recipeFiles[0].src}}" 
+                        src="{{recipe.files[0].src}}" 
                         alt="Imagem de {{recipe.title}}"
                         onclick="Lightbox.open()"  
                     >
                 {% endif %}
 
                 <div class="lightbox-target">
-                    <img src="{{recipeFiles[0].src}}"" alt="{{recipeFiles[0].name}}">
+                    <img src="{recipe.files[0].src}}"" alt="{{recipe.files[0].name}}">
                     <a 
                         href="#" 
                         class="lightbox-close"
@@ -56,7 +53,7 @@
             </div>
 
             <div class="gallery-preview">
-                {% for image in recipeFiles %}
+                {% for image in recipe.files %}
                 <img  
                     src="{{image.src}}" 
                     alt="{{image.name}}"

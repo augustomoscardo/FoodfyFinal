@@ -475,3 +475,24 @@ input {
     line-height: 16px;
     color: #666;
 }
+
+/* === PAGINATION === */
+.pagination {
+    display:flex;
+    justify-content: center;
+}
+ 
+.pagination a + a {
+    margin-left: 16px;
+}
+.pagination a,
+.pagination span {
+    color: #6558C3;
+    text-decoration: none;
+}
+ 
+.pagination a:hover {
+    filter: brightness(0.7);
+    font-weight: 700;
+    border-bottom: 1px solid #6558C3;
+}

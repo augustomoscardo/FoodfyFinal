@@ -3,7 +3,10 @@ async function post(req, res, next) {
         const keys = Object.keys(req.body)
 
         for (key of keys) {
-            if (req.body[key] == "") {
+            if (req.body[key] === "") {
+
+                req.files.map(file => unlinkSync(file.path))
+
                 return res.render('admin/chefs/create', {
                     chef: req.body,
                     error: 'Por favor, preencha todos os campos'
@@ -11,7 +14,7 @@ async function post(req, res, next) {
             }
         }
 
-        if (!req.files || req.files.length == 0) 
+        if (!req.files || req.files.length === 0) 
             return res.render('admin/chefs/create', {
                 chef: req.body,
                 error: "Por favor envie pelo menos uma imagem."
@@ -28,7 +31,7 @@ async function update(req, res, next) {
         const keys = Object.keys(req.body)
 
         for (key of keys) {
-            if (req.body[key] == "" && key != "removed_files") {
+            if (req.body[key] === "" && key !== "removed_files") {
                 return res.render(`admin/chefs/edit`, {
                     chef: req.body,
                     error: 'Por favor, preencha todos os campos'
@@ -40,7 +43,6 @@ async function update(req, res, next) {
     } catch (error) {
         console.error(error);
     }
-
 
     next()
 }

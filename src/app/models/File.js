@@ -36,7 +36,7 @@ module.exports = {
             recipe_id,
             file_id
         ]
-        console.log(query, values);
+        
         return db.query(query, values)
     }
 }

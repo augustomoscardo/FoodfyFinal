@@ -29,8 +29,10 @@ module.exports = {
 
         try {            
 
-            const { name, email, is_admin } = req.body
-            
+            const { name, email } = req.body
+
+            let is_admin = req.body.is_admin && JSON.parse(req.body.is_admin) //make sure is_admin is a boolean
+          
             const firstPassword = crypto.randomBytes(5).toString("hex")
 
             const passwordHash = await hash(firstPassword, 8)
@@ -43,14 +45,12 @@ module.exports = {
                 created_at: date(Date.now()).iso
             })
 
-            req.session.userId = user.id // adiciando a chave userId no req.session
-
-            console.log(user);
+            // req.session.userId = user // add key userId un req.session
 
             await mailer.sendMail({
-                to: user.email,
+                to: email,
                 from: 'no-reply@foodyfy.com.br',
-                subject: `Bem vindo ${user.name}!`,
+                subject: `Bem vindo ${name}!`,
                 html: `<h2> Bem vindo ao Foody! </h2>
                 <p>Você recebeu seu acesso provisório ao site!</p>
                 <p>Esta senha pode ser alterada no futuro se você desejar. Basta solicitar uma recuperação de senha na tela de login</p>
@@ -61,7 +61,7 @@ module.exports = {
                 `
             })
 
-            return res.redirect(`/admin/users/${user.id}/edit`)
+            return res.redirect(`/admin/users/${user}/edit`)
 
         } catch (error) {
             console.error(error)
@@ -75,15 +75,17 @@ module.exports = {
             return res.render("admin/users/edit", { user })
 
         } catch (error) {
-            console.log(error)  
+            console.error(error)  
         }
     },
     async update(req, res) {
         try {
             const { user } = req
 
-            const { name, email, is_admin } = req.body
-            
+            const { name, email } = req.body
+
+            let is_admin = req.body.is_admin && JSON.parse(req.body.is_admin) //make sure is_admin is a boolean
+
             await User.update(user.id, {
                 name,
                 email,
@@ -91,7 +93,7 @@ module.exports = {
             })
 
             return res.render(`admin/users/edit`, {
-                user: req.body,
+                user: { ...req.body, is_admin },
                 success: 'Conta atualizada com sucesso'
             })
 
@@ -107,7 +109,7 @@ module.exports = {
         try {
             // pegar todas as receitas do usuário
             const recipesOfUser = await Recipe.findAll({ where: { user_id: req.body.id } })
-
+         
             // das receitas, pegar todas as receitas
             const recipesFilesPromise = recipesOfUser.map(recipe => Recipe.files(recipe.id))
 
@@ -122,9 +124,7 @@ module.exports = {
                     try {
                         unlinkSync(file.path)
 
-                        File.init({ table: "files"})
-
-                        File.delete("id", file.file_id)
+                        File.delete(file.file_id)
                     } catch (error) {
                         console.error(error);
                     }
@@ -133,7 +133,10 @@ module.exports = {
 
             await Promise.all(recipesFiles)
 
+            const users = await User.findAll()
+
             return res.render(`admin/users/index`, {
+                users,
                 success: 'Conta deletada com sucesso'
             })
 

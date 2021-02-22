@@ -20,12 +20,12 @@
                         <p>{{chef.name}}</p>
                     </div>
                     <div class="chef-total_recipes">
-                        {% if chef.count == 0 %}
+                        {% if chef.total_recipes == 0 %}
                             <p>Não há receitas</p>
-                        {% elseif chef.count == 1 %}
-                            <p>{{chef.count}} receita</p>
+                        {% elseif chef.total_recipes == 1 %}
+                            <p>{{chef.total_recipes}} receita</p>
                         {% else %}
-                            <p>{{chef.count}} receitas</p>
+                            <p>{{chef.total_recipes}} receitas</p>
                         {% endif %}
                     </div>
                 </div>
@@ -33,6 +33,11 @@
         {% endfor %}
     </div>
 </div>
+
+<div class="pagination" data-page="{{pagination.page}}" data-total="{{pagination.total}}" data-filter="{{filter}}"></div>
+
+<script src="/js/paginate.js"></script>
+
 {% endblock content %}
 
 

@@ -42,18 +42,19 @@ module.exports = {
             let offset = limit * (page - 1)
 
             let recipes = await Recipe.paginate({ limit, offset })
+
             const recipesPromise = recipes.map(LoadRecipeService.format)
 
             recipes = await Promise.all(recipesPromise)
 
-            // if (recipes = "") {
-            //     const pagination = { page }
+            if (recipes === "") {
+                const pagination = { page }
 
-            //     return res.render('admin/recipes/index', { recipes, pagination })
-            // }
+                return res.render('admin/recipes/index', { recipes, pagination })
+            }
 
             const pagination = {
-                total: Math.ceil(recipes[0].total/limit),
+                total: Math.ceil(recipes.length/limit),
                 page
             }
 
@@ -87,8 +88,6 @@ module.exports = {
 
             recipes = await Promise.all(recipesPromise)
             
-            console.log(recipes);
-
             const search = {
                 term: filter || 'Todas as receitas',
                 total: recipes.length
@@ -111,20 +110,19 @@ module.exports = {
             let offset = limit * (page - 1)
 
             let chefs = await Chef.paginate({ page, limit, offset })
+            
             const chefsPromise = chefs.map(LoadChefService.format)
 
             chefs = await Promise.all(chefsPromise)
 
-            // if (chefs = "") {
-            //     const pagination = { page }
+            if (chefs === "") {
+                const pagination = { page }
 
-            //     return res.render('admin/chefs/index', { chefs, pagination })
-            // }
+                return res.render('admin/chefs/index', { chefs, pagination })
+            }
 
-            console.log(chefs);
-            
             const pagination = {
-                total: Math.ceil(chefs[0].total/limit),
+                total: Math.ceil(chefs.length/limit),
                 page
             }
 

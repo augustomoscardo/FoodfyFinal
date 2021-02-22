@@ -45,7 +45,7 @@
         <select name="chef" required>
             <option value="" disabled selected style="display: none">Selecione uma opção</option>
             {% for chef in chefsSelectOptions %}
-                <option value="{{chef.id}}" {% if recipe.chef_id == chef.id %}selected{% endif %}>
+                <option value="{{chef.id}}" {% if recipe.chef_id == chef.id or recipe.chef == chef.id %}selected{% endif %}>
                     {{chef.name}}
                 </option>
             {% endfor %}

@@ -9,8 +9,7 @@ section.user-index .page-header a {
 section.user-index .users {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 5px;
-    justify-items: start;
+    grid-gap: 10px;
 }
 
 section.user-index .users .chef {

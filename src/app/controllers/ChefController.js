@@ -30,8 +30,6 @@ module.exports = {
 
                 return res.render('admin/chefs/index', { chefs, pagination })
             }
-
-            // console.log(chefs);
             
             const pagination = {
                 total: Math.ceil(chefs.length/limit),
@@ -41,7 +39,7 @@ module.exports = {
             return res.render('admin/chefs/index', { chefs, pagination })
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
 
     },
@@ -54,24 +52,24 @@ module.exports = {
         try {
             // Criar a imagem primeiro, pois quando eu crio o chef é nele que eu pego a imagem.
             const files = req.files
-            // console.log(files);
+
             const fileId = await Promise.all(files.map(file => File.create({
                 name: file.filename,
                 path: file.path
             })))    
-            // console.log(fileId);
+
 
             const chef = await Chef.create({
                name: req.body.name,
                file_id: fileId[0],
                created_at: date(Date.now()).iso
             })
-            // console.log(chef);
+
             
             return res.redirect(`/admin/chefs/${chef}`)
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     },
     async show(req, res) {
@@ -84,7 +82,7 @@ module.exports = {
             return res.render("admin/chefs/show", { chef, chefRecipes })
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     },
     async edit(req, res) {
@@ -95,11 +93,13 @@ module.exports = {
             return res.render("admin/chefs/edit", { chef })
 
         } catch (error) {
-            console.log(error) 
+            console.error(error) 
         }
     },
     async put(req, res) {
 
+        const chef = await Chef.findOne({ where: { id: req.body.id }})
+console.log(chef);
         try {
             // const keys = Object.keys(req.body)
 
@@ -109,19 +109,29 @@ module.exports = {
             //     }
             // }
 
-            const file = req.files
+            const files = req.files
+
+            async function deleteFileById(id) {
+                const file = await File.findOne({ where: { id }})
+
+                unlinkSync(file.path)
+
+                await File.delete(id)
+            }
 
             // get new image
-            if (file.length != 0) {
-                const fileId = await File.create({
+            if (files.length !== 0) {
+                const fileId = await Promise.all(files.map(file => File.create({
                     name: file.filename,
-                    path: file.file.path
-                })
+                    path: file.path
+                })))
 
                 await Chef.update(req.body.id, {
                     name: req.body.name,
-                    file_id: fileId
+                    file_id: fileId[0]
                 })
+
+                await deleteFileById(chef.file_id)
             }
 
             await Chef.update(req.body.id, {
@@ -131,15 +141,11 @@ module.exports = {
             // remove photo from db
             if (req.body.removed_files) {
                 // 1,
-                const removedFile = req.body.removed_files.split(",") // [1,]
+                const removedFiles = req.body.removed_files.split(",") // [1,]
 
-                const file_id = removedFile[0]
+                const file_id = removedFiles[0]
 
-                const file = await File.findOne({ where: { id: file_id }})
-
-                unlinkSync(file.path)
-
-                await File.delete(file_id)
+                await deleteFileById(file_id)
 
                 console.log(file_id);
             }
@@ -153,12 +159,11 @@ module.exports = {
     async delete(req, res) {
 
         try {
-            // finding chef
+            // find chef
             const chef = await Chef.findOne({ where: { id: req.body.id }})
-            // const chef = await LoadChefService.load("chef", { where: { id: req.params.id }})
 
+            // console.log({chef});
 
-            console.log({chef});
             // get image of chef
             const chefFile = await Chef.files(chef.id)
             console.log({chefFile});
@@ -168,11 +173,14 @@ module.exports = {
                 
                 return res.send('Chefs que possuem receitas não podem ser deletados')
             } else {
+
+                await Chef.delete(req.body.id)
+
                 unlinkSync(chefFile[0].path)
                 
-                await File.delete(chefFile[0].id)
                 
-                await Chef.delete(req.body.id)
+                await File.delete(chefFile[0].file_id)
+
 
                 return res.redirect(`/admin/chefs`)
             }

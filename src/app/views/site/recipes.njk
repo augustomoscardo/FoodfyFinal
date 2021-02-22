@@ -43,8 +43,9 @@
         {% endfor %}
 
     </section>
-{% endblock %}
 
-{% block scripts %}
-<script src="/js/recipePage.js"></script>
+    <div class="pagination" data-page="{{pagination.page}}" data-total="{{pagination.total}}" data-filter="{{filter}}"></div>
+
+    <script src="/js/paginate.js"></script>
+    <script src="/js/recipePage.js"></script>
 {% endblock %}

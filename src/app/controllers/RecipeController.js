@@ -11,15 +11,20 @@ module.exports = {
     async index(req, res) {
 
         try {
+
+            const { userId } = req.session
             
             let { page, limit } = req.query
 
             page = page || 1
-            limit = limit || 6
+            limit = limit || 3
 
             let offset = limit * (page - 1)
 
-            let recipes = await Recipe.paginate({ limit, offset })
+            let recipes = await Recipe.paginate({ limit, offset, where: {
+                column: 'user_id',
+                value: userId
+            } })
 
             const recipesPromise = recipes.map(LoadRecipeService.format)
 
@@ -31,10 +36,13 @@ module.exports = {
                 return res.render('admin/recipes/index', { recipes, pagination })
             }
 
+            // console.log({recipes, limit, page })
+
             const pagination = {
                 total: Math.ceil(recipes.length/limit),
                 page
             }
+            console.log(pagination);
             
             return res.render('admin/recipes/index', { recipes, pagination })
             
@@ -59,7 +67,7 @@ module.exports = {
 
         try {
             const { title, chef, ingredients, preparation, information } = req.body
-console.log(req.body);
+
             // create recipe
             const recipe = await Recipe.create({
                 title,
@@ -90,7 +98,7 @@ console.log(req.body);
 
         try {
             const recipe = await LoadRecipeService.load("recipe", { where: { id: req.params.id }})
-// console.log(recipe);
+
             return res.render('admin/recipes/show', { recipe })
         } catch (error) {
             console.error(error)
@@ -147,17 +155,19 @@ console.log(req.body);
                     } catch (error) {
                         console.error(error);
                     }
-                    await Promise.all(removedFilesPromise)
     
                     await File.delete(id)
                 })
+                
+                await Promise.all(removedFilesPromise)
+
             }
 
             const { title, chef, ingredients, preparation, information } = req.body
 
             await Recipe.update(req.body.id, {
                 title, 
-                chef, 
+                chef_id: chef, 
                 ingredients, 
                 preparation, 
                 information
@@ -174,7 +184,7 @@ console.log(req.body);
         try {
             // get recipe files
             const files = await Recipe.files(req.body.id)
-            // console.log(files);
+
 
             // delete recipe
             await Recipe.delete(req.body.id)

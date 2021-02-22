@@ -1,3 +1,5 @@
+const User = require('../models/User')
+
 function onlyUsers(req, res, next) {
     if (!req.session.userId)
         return res.redirect('/admin/users/login')
@@ -12,12 +14,12 @@ function userIsLogged( req, res, next) {
     next()
 }
 
-function userIsAdmin(req, res, next) {
-    // if (req.session.isAdmin == false) return res.render('admin/users', {
-    //     error: "Essa área é restrita para administradores!"
-    // })
+async function userIsAdmin(req, res, next) {
 
-    if (!req.session.isAdmin) return res.render('admin/users/index', {
+    const user = await User.findOne({ where: {id: req.session.userId }})
+
+    if (!req.session.isAdmin) return res.render('admin/profile/index', {
+        user,
         error: "Essa área é restrita para administradores!"
     })
 

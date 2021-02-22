@@ -23,15 +23,15 @@ routes.post('/reset-password', SessionValidator.reset, SessionController.reset)
 // ADMIN - USERS
 
 // Rotas que o administrador irá acessar para gerenciar usuários
-routes.get('/', onlyUsers, UserController.list); //Mostrar a lista de usuários cadastrados
+routes.get('/', onlyUsers, userIsAdmin, UserController.list); //Mostrar a lista de usuários cadastrados
 
 routes.get('/register', onlyUsers, userIsAdmin, UserController.registerForm) // Formulário p/ registro
-routes.post('/', onlyUsers, UserValidator.post, UserController.post); //Cadastrar um usuário
+routes.post('/', onlyUsers, userIsAdmin, UserValidator.post, UserController.post); //Cadastrar um usuário
 
-routes.get('/:id/edit', userIsAdmin, UserValidator.edit, UserController.edit) // Página de edição
-routes.put('/', userIsAdmin, UserValidator.update, UserController.update); // Editar um usuário
+routes.get('/:id/edit', onlyUsers, userIsAdmin, UserValidator.edit, UserController.edit) // Página de edição
+routes.put('/', onlyUsers, userIsAdmin, UserValidator.update, UserController.update); // Editar um usuário
 
-routes.delete('/', userIsAdmin, UserValidator.AdminDeletesOwnAccount, UserController.delete); // Deletar um usuário
+routes.delete('/', onlyUsers, userIsAdmin, UserValidator.AdminDeletesOwnAccount, UserController.delete); // Deletar um usuário
 
 
 

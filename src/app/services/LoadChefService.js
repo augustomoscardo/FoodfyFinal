@@ -21,8 +21,6 @@ async function format(chef) {
     chef.files = file
     chef.total_recipes = recipes.length
 
-    // console.log(file);
-
     return chef
 }
 

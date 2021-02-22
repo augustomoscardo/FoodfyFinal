@@ -62,7 +62,7 @@ const Base = {
 
                 values.push(`'${fields[key]}'`)                           
             })
-        // console.log(keys, values);
+
             const query = `INSERT INTO ${this.table} 
                 (${keys.join(',')})
                 VALUES (${values.join(',')})
@@ -84,14 +84,26 @@ const Base = {
             Object.keys(fields).map(key => {
                 const line = `${key} = '${fields[key]}'`
 
+                if (fields[key] === 'file_id' || fields[key] !== 'file_id') {
+                    if (Array.isArray(fields[key])) {
+                        const formattedValues = fields[key].map(item => `'${item}'`)
+
+                    //VALUES('chef', ARRAY['123'], '345')
+
+                        return update = [...update, `${key} = ARRAY[${formattedValues}]`] // para pegar os fields que são array
+                    }
+
+                   return update = [...update, `${line}`]
+                }
+
                 update.push(line)
             })
 
-            let query = `UPDATE ${this.table} SET
+            const query = `UPDATE ${this.table} SET
                 ${update.join(',')} WHERE id = ${id}`
 
-            await db.query(query)
-            return
+            const results = await db.query(query)
+            return results.rows[0]
 
         } catch (error) {
             console.error(error);
@@ -100,11 +112,12 @@ const Base = {
     delete(id) {
         return db.query(`DELETE FROM  ${this.table} WHERE id = $1`, [id])
     },
-    async paginate({ limit, offset }) {
+    async paginate({ limit, offset, where }) {
         try {
             const query = `
                 SELECT ${this.table}.*, (SELECT count(*) FROM ${this.table}) AS total
                 FROM ${this.table}
+                ${where ? `WHERE ${where.column} = ${where.value}` : ''}
                 LIMIT ${limit} OFFSET ${offset}
             `
 

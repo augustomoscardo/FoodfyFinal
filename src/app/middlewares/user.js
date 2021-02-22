@@ -7,9 +7,6 @@ async function checkCredential(req, res, next) {
 
     const recipe = await LoadRecipeService.load("recipe", { where: { id: req.params.id }})
 
-    console.log(recipe);
-
-    console.log(req.session);
     if (recipe.user_id != req.session.userId) {
         // req.session.error = "Você não possui permissão para alterar as receitas de outros usuários"
         
