@@ -10,6 +10,7 @@
 
         <link rel="shortcut icon" href="/img/admin-img/favicon.ico" type="image/x-icon">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/styles/main.css"> 
         <link rel="stylesheet" href="/styles/admin.css"> 
         <link rel="stylesheet" href="/styles/chef-admin.css"> 
         <link rel="stylesheet" href="/styles/recipe-admin.css">
@@ -24,24 +25,6 @@
             {% include "parts/messages.njk" %}
 
             {% include "parts/header.njk" %}
-
-            {# <header>    
-                <div class="header-container"> 
-                
-                    <div class="logo">
-                        <a href="/admin/recipes">
-                            <img src="/img/admin-img/logo-white.png" alt="logo-white">
-                        </a>
-                    </div>
-                    
-                    <div class="links">
-                        <a href="/admin/recipes" {% if pageName == 'recipes' %} class= "active" {% endif %}>Receitas</a>
-                        <a href="/admin/chefs" {% if pageName == 'chefs' %} class= "active" {% endif %}>Chefs</a>
-                        <a href="/admin/users" {% if pageName == 'users' %} class= "active" {% endif %}>Usuários</a>
-                    </div>
-            
-                </div>
-            </header> #}
 
             {% block content %}{% endblock %}
 

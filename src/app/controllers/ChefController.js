@@ -15,11 +15,11 @@ module.exports = {
             let { page, limit } = req.query
 
             page = page || 1
-            limit = limit || 6
+            limit = limit || 8
 
             let offset = limit * (page - 1)
 
-            let chefs = await Chef.paginate({ page, limit, offset })
+            let chefs = await Chef.paginate({ limit, offset })
             
             const chefsPromise = chefs.map(LoadChefService.format)
 
@@ -32,7 +32,7 @@ module.exports = {
             }
             
             const pagination = {
-                total: Math.ceil(chefs.length/limit),
+                total: Math.ceil(chefs[0].total/limit),
                 page
             }
             
@@ -50,7 +50,7 @@ module.exports = {
     async post(req, res) {
 
         try {
-            // Criar a imagem primeiro, pois quando eu crio o chef é nele que eu pego a imagem.
+            // Create image first
             const files = req.files
 
             const fileId = await Promise.all(files.map(file => File.create({
@@ -58,7 +58,7 @@ module.exports = {
                 path: file.path
             })))    
 
-
+            // Create chef and get file_id
             const chef = await Chef.create({
                name: req.body.name,
                file_id: fileId[0],
@@ -99,16 +99,8 @@ module.exports = {
     async put(req, res) {
 
         const chef = await Chef.findOne({ where: { id: req.body.id }})
-console.log(chef);
+
         try {
-            // const keys = Object.keys(req.body)
-
-            // for (key of keys) {
-            //     if (req.body[key] == "" && key != "removed_files") {
-            //         return res.send('Please fill all fields!')
-            //     }
-            // }
-
             const files = req.files
 
             async function deleteFileById(id) {
@@ -131,9 +123,11 @@ console.log(chef);
                     file_id: fileId[0]
                 })
 
+                // delete previous image
                 await deleteFileById(chef.file_id)
             }
 
+            // update without new image
             await Chef.update(req.body.id, {
                 name: req.body.name,
             })
@@ -146,8 +140,6 @@ console.log(chef);
                 const file_id = removedFiles[0]
 
                 await deleteFileById(file_id)
-
-                console.log(file_id);
             }
 
             return res.redirect(`/admin/chefs/${req.body.id}`)
@@ -162,11 +154,8 @@ console.log(chef);
             // find chef
             const chef = await Chef.findOne({ where: { id: req.body.id }})
 
-            // console.log({chef});
-
             // get image of chef
             const chefFile = await Chef.files(chef.id)
-            console.log({chefFile});
 
             // can't delete if chef has recipes registered
             if (chef.totalRecipes >= 1) {
@@ -174,11 +163,13 @@ console.log(chef);
                 return res.send('Chefs que possuem receitas não podem ser deletados')
             } else {
 
+                // remove chef
                 await Chef.delete(req.body.id)
 
+                // remove image from public
                 unlinkSync(chefFile[0].path)
                 
-                
+                // remove image from db
                 await File.delete(chefFile[0].file_id)
 
 

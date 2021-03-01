@@ -1,0 +1,87 @@
+/*=== INDEX CHEFS ===*/
+
+/* CHEF */
+.chefs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr ;
+}
+
+.chefs .chef {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 20px;
+    align-items: center;
+    
+    margin-bottom: 30px;
+}
+.chef .chef_avatar img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0;
+}
+
+.chef_content .chef_name p {
+    margin-bottom: 10px;
+
+    font-size: 18px;
+    line-height: 21px;
+    color: #111;
+}
+
+.chef_content a {
+    margin-bottom: 0;
+}
+
+.chef-recipes h2 {
+    margin-bottom: 30px;
+}
+
+/* === SHOW === */
+
+#chef .page-header {
+    align-items: center;
+    align-content: center;
+    
+    margin-bottom: 24px;
+}
+
+#chef .page-header h2 {
+    margin: 0;
+}
+
+#chef .page-header a {
+    background-color: #6558c3;
+    color: #fff;
+    text-decoration: none;
+
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+#chef .chef-header {
+    text-align: center;
+}
+
+#chef .chef-avatar_url img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 30px;
+}
+
+#chef .chef-name h1 {
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 42px;
+    color: var(--color-main);
+    margin-bottom: 4px;
+}
+
+#chef .chef-total_recipes p{
+    font-style: 20px;
+    line-height: 24px;
+    color: #777;
+}

@@ -16,7 +16,7 @@ function userIsLogged( req, res, next) {
 
 async function userIsAdmin(req, res, next) {
 
-    const user = await User.findOne({ where: {id: req.session.userId }})
+    const user = await User.findOne({ where: { id: req.session.userId }})
 
     if (!req.session.isAdmin) return res.render('admin/profile/index', {
         user,

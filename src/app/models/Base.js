@@ -113,7 +113,8 @@ const Base = {
         return db.query(`DELETE FROM  ${this.table} WHERE id = $1`, [id])
     },
     async paginate({ limit, offset, where }) {
-        try {
+        try { 
+             // ideia of "where" is being used in RecipeController
             const query = `
                 SELECT ${this.table}.*, (SELECT count(*) FROM ${this.table}) AS total
                 FROM ${this.table}

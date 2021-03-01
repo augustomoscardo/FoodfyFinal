@@ -54,7 +54,7 @@ module.exports = {
             }
 
             const pagination = {
-                total: Math.ceil(recipes.length/limit),
+                total: Math.ceil(recipes[0].total / limit),
                 page
             }
 
@@ -105,11 +105,11 @@ module.exports = {
             let { page, limit } = req.query
 
             page = page || 1
-            limit = limit || 6
+            limit = limit || 8
 
             let offset = limit * (page - 1)
 
-            let chefs = await Chef.paginate({ page, limit, offset })
+            let chefs = await Chef.paginate({ limit, offset })
             
             const chefsPromise = chefs.map(LoadChefService.format)
 
@@ -122,7 +122,7 @@ module.exports = {
             }
 
             const pagination = {
-                total: Math.ceil(chefs.length/limit),
+                total: Math.ceil(chefs[0].total/limit),
                 page
             }
 

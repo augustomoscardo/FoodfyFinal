@@ -37,4 +37,25 @@ module.exports = {
         
         return results.rows
     },
+    async findPaginatedRecipesByUserId({ id, limit, offset }) {
+        try {
+            const query = `
+                SELECT recipes.*, 
+                chefs.name AS chef_name,
+                (SELECT count(*) FROM recipes) AS total
+                FROM recipes
+                LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
+                LEFT JOIN users ON (users.id = recipes.user_id)
+                WHERE user_id = ${id}
+                LIMIT ${limit} OFFSET ${offset}
+            `
+
+            const results = await db.query(query)
+
+            return results.rows
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }

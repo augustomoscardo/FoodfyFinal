@@ -51,7 +51,8 @@ const LoadService = {
             console.error(error);
         }
     },
-    format
+    format,
+    getImages
 
 }
 

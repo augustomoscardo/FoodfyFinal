@@ -17,18 +17,18 @@ module.exports = {
             let { page, limit } = req.query
 
             page = page || 1
-            limit = limit || 3
+            limit = limit || 6
 
             let offset = limit * (page - 1)
+            let recipes = await Recipe.findPaginatedRecipesByUserId({ id: userId, limit, offset })
 
-            let recipes = await Recipe.paginate({ limit, offset, where: {
-                column: 'user_id',
-                value: userId
-            } })
-
-            const recipesPromise = recipes.map(LoadRecipeService.format)
-
-            recipes = await Promise.all(recipesPromise)
+            recipes = await Promise.all(recipes.map(async recipe => {
+                return {
+                    ...recipe,
+                    image: await LoadRecipeService
+                        .getImages(recipe.id)
+                }
+            }))
 
             if (recipes === "") {
                 const pagination = { page }
@@ -36,13 +36,10 @@ module.exports = {
                 return res.render('admin/recipes/index', { recipes, pagination })
             }
 
-            // console.log({recipes, limit, page })
-
             const pagination = {
-                total: Math.ceil(recipes.length/limit),
+                total: Math.ceil(recipes[0].total/limit),
                 page
             }
-            console.log(pagination);
             
             return res.render('admin/recipes/index', { recipes, pagination })
             
@@ -53,7 +50,7 @@ module.exports = {
     async create(req, res) {
     
         try {
-            // get chefs
+            // get chefs 
             const chefsSelectOptions = await Chef.findAll()
             
             return res.render('admin/recipes/create', { chefsSelectOptions })
@@ -121,14 +118,7 @@ module.exports = {
     async put(req, res) {
 
         try {
-            // const keys = Object.keys(req.body)
-
-            // for (key of keys) {
-            //     if (req.body[key] == "" && key != "removed_files") {
-            //         return res.send('Please fill all fields!')
-            //     }
-            // }
-
+            // remove input if  = "  "
             req.body.ingredients = req.body.ingredients.filter(ingredient => ingredient !== '')
             req.body.preparation = req.body.preparation.filter(preparation => preparation !== '')
 
