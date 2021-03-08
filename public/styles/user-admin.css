@@ -68,7 +68,6 @@ section.user-index .chef-recipes h2 {
 /* === REGISTER FORM === */
 .user-register .form-header .buttons {
     display: flex;
-    /* justify-content: space-between; */
 }
 
 .user-register .form-header .buttons button {
@@ -135,6 +134,8 @@ section.user-index .chef-recipes h2 {
     width: 450px;
 }
 
+.user-profile 
+
 /* === EDIT === */
 
 section.user-edit .form-header .form-header-btn .delete {
@@ -161,4 +162,11 @@ section.user-edit .form-header .form-header-btn .delete {
 
     width: 15px;
     height: 15px;
+}
+
+.error {
+    background-color: #e74c3c;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
 }

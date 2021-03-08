@@ -38,6 +38,8 @@ section.login.container .footer ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    padding: 0;
 }
 
 section.login.container .footer ul li {
@@ -50,8 +52,14 @@ section.login.container .footer ul li a {
     color: #969696;
     text-decoration: none;
     font-weight: bold;
+    font-family: "Helvetica";
 
     transition: 400ms;
+}
+
+section.login.container .footer ul li button {
+    padding: 9px 36px;
+    border-style: none;
 }
 
 section.login.container .footer ul li a:hover {
