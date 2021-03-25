@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS FoodfyFinal;
-CREATE DATABASE FoodfyFinal;
+DROP DATABASE IF EXISTS foodfyfinaldb;
+CREATE DATABASE foodfyfinaldb;
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
