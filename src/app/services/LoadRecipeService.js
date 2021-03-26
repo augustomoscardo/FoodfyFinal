@@ -16,7 +16,13 @@ async function getImages(recipeId) {
 async function format(recipe) {
     const chef = await Chef.findOne({ where: { id: recipe.chef_id }})
 
+    console.log(`${JSON.stringify(recipe)} files`);
+
     const files = await getImages(recipe.id)
+
+    if (!files.length) {
+        console.log(`${recipe} recipe not found`);
+    }
 
     recipe.image = files[0].src
     recipe.files = files

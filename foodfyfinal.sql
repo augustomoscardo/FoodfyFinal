@@ -99,10 +99,16 @@ PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 ALTER TABLE "users" ADD COLUMN reset_token text;
 ALTER TABLE "users" ADD COLUMN reset_token_expires text;
 
--- delete cascade
-ALTER TABLE "files"
-DROP CONSTRAINT 
-ADD CONSTRAINT
-FOREIGN KEY
-REFERENCES
-ON DELETE CASCADE;
+-- to run seeds
+DELETE FROM recipe_files;
+DELETE FROM recipes;
+DELETE FROM chefs;
+DELETE FROM files;
+DELETE FROM users;
+
+-- restart sequence auto_increment from tables ids
+ALTER SEQUENCE users_id_seq RESTART WITH 1;
+ALTER SEQUENCE chefs_id_seq RESTART WITH 1;
+ALTER SEQUENCE recipes_id_seq RESTART WITH 1;
+ALTER SEQUENCE files_id_seq RESTART WITH 1;
+ALTER SEQUENCE recipe_files_id_seq RESTART WITH 1;
