@@ -1,137 +1,134 @@
 /* === INDEX === */
 section.user-index .page-header a {
-    padding: 10px 50px;
+  padding: 10px 50px;
 
-    width: 140px;
-    height: 40px;
+  width: 140px;
+  height: 40px;
 }
 
 section.user-index .users {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
 }
 
 section.user-index .users .chef {
-    align-items: center;
-    
-    margin-bottom: 30px;
+  align-items: center;
+  
+  margin-bottom: 30px;
 }
 
 section.user-index .user_content .user_name p {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 
-    font-family: Helvetica;
-    font-size: 18px;
-    line-height: 21px;
-    color: #111;
+  font-family: Helvetica;
+  font-size: 18px;
+  line-height: 21px;
+  color: #111;
 }
 
 section.user-index .user_content .user_email p {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 
-    font-family: Helvetica;
-    font-size: 14px;
-    line-height: 17px;
-    color: #777;
+  font-family: Helvetica;
+  font-size: 14px;
+  line-height: 17px;
+  color: #777;
 }
 
 section.user-index .user_content {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 section.user-index .user_content .buttons {
-    display: flex;
+  display: flex;
 }
 
 section.user-index .user_content a {
-    color: #6558C3;
-    text-decoration: none;
-    font-weight: bold;
+  color: #6558C3;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 section.user-index .user_content form button {
-    background-color: white;
-    color: #F55A5A;
+  background-color: white;
+  color: #F55A5A;
 
-    padding: 0;
-    margin-left: 16px;
+  padding: 0;
+  margin-left: 16px;
 }
 
 section.user-index .chef-recipes h2 {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
-
-
-
 
 /* === REGISTER FORM === */
 .user-register .form-header .buttons {
-    display: flex;
+  display: flex;
 }
 
 .user-register .form-header .buttons button {
-    padding: 10px 40px;
+  padding: 10px 40px;
 
-    width: 140px;
-    height: 40px;
+  width: 140px;
+  height: 40px;
 
 }
 
 .user-register .form-header .buttons a {
-    margin-left: 16px;
-    padding: 10px 40px;
+  margin-left: 16px;
+  padding: 10px 40px;
 
-    width: 140px;
-    height: 40px;
-    border-radius: 4px;
+  width: 140px;
+  height: 40px;
+  border-radius: 4px;
 
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
 
-    background: #8A8A8A;
+  background: #8A8A8A;
 }
 
 .user-register .items_input_text { /* item 1 and item 1 side by site */
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 40px;
 }
 
 .user-register .item .admin_checkbox { /* item 3 comes under item 1 */
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
 }
 
 .user-register .item .admin_checkbox input[type="checkbox"] {
-    margin: 0;
-    margin-right: 8px;
+  margin: 0;
+  margin-right: 8px;
 
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 }
 
 /* === PROFILE === */
 
 .user-profile .items_input_text { /* item 1 and item 1 side by site */
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 40px;
 }
 
 .user-profile .item .password_input { /* item 3 comes under item 1 */
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
 }
 
 .user-profile .item .password_input input[type="password"] {
-    margin-top: 10px;
+  margin-top: 10px;
 
-    width: 450px;
+  width: 450px;
 }
 
 .user-profile 
@@ -139,34 +136,38 @@ section.user-index .chef-recipes h2 {
 /* === EDIT === */
 
 section.user-edit .form-header .form-header-btn .delete {
-    background: #DC4747;
+  background: #DC4747;
 
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .user-edit .items_input_text { /* item 1 and item 1 side by site */
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 40px;
 }
 
 .user-edit .item .admin_checkbox { /* item 3 comes under item 1 */
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
 }
 
 .user-edit .item .admin_checkbox input[type="checkbox"] {
-    margin: 0;
-    margin-right: 8px;
+  margin: 0;
+  margin-right: 8px;
 
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 }
 
 .error {
-    background-color: #e74c3c;
-    padding: 4px;
-    border-radius: 4px;
-    color: white;
+  background-color: #e74c3c;
+  padding: 4px;
+  border-radius: 4px;
+  color: white;
+}
+
+.user-edit .btn-save-user {
+  margin-left: 16px;
 }

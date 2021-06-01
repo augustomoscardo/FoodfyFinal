@@ -1,48 +1,47 @@
 @keyframes hidemessage {
-    to {
-        top: -50px;
-        opacity: 0;
-        z-index: 0;
-    }
+  to {
+    top: -50px;
+    opacity: 0;
+    z-index: 0;
+  }
 }
 
 .messages {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 
-    padding: 60px 25px;
-    border-radius: 4px;
-    
-    position: absolute;
-    z-index: 100;
-    
-    color: #fff;
-    
-    top: 15px;
-    right: 15px;
+  padding: 0 16px;
+  border-radius: 4px;
+  
+  position: absolute;
+  z-index: 100;
+  
+  color: #fff;
+  
+  top: 15px;
+  right: 15px;
 
-    width: 350px;
-    height: 135px;
+  width: 350px;
+  height: 135px;
 
-    opacity: 1;
+  opacity: 1;
 
-    animation: hidemessage 400ms 5s ease-out forwards;
-    /* visibility: hidden; */
+  animation: hidemessage 400ms 5s ease-out forwards;
 }
 
 .messages.error, .messages.success {
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 
-    line-height: 19px;
-    font-weight: bold;
-    font-size: 16px;
+  line-height: 19px;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .messages.error {
-    background: #DC4747;   
+  background: #DC4747;   
 }
 
 .messages.success {
-    background: #01B12A;
+  background: #01B12A;
 }

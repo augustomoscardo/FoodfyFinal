@@ -2,50 +2,54 @@
 {% extends "site/layout.njk" %}
 
 {% block head %}
-    
-    <title>Receitas - Foodfy</title>
+
+  <title>Receitas - Foodfy</title>
 
 {% endblock %}
 
 {% block headerContent %} 
 <div class="form-filter">
-    <form action="/searchResult" method="get">
-        <input 
-            type="text" 
-            name="filter" 
-            placeholder="Buscar uma receita"
-            value="{{ filter }}"
-            required
-        >
-        <button type="submit">Filtrar</button>
-    </form>          
+  <form action="/searchResult" method="get">
+      <input 
+        type="text" 
+        name="filter" 
+        placeholder="Buscar uma receita"
+        value={{filter}}
+        required
+      >
+      <button type="submit">Filtrar</button>
+  </form>          
 </div>
 {% endblock %}
-    
+
 {% block content %}
-          
-    <section class="cards">
 
-        {% for recipe in recipes %}    
-        <div class="card" id="{{recipe.id}}">
-            
-            <div class="card_image">
-                <img src="{{recipe.image}}" alt="Imagem de {{recipe.title}}">
-            </div>
-            <div class="card_title">
-                <p>{{recipe.title}}</p>
-            </div>
-            <div class="card_chef">
-                <p>por {{recipe.chef_name}}</p>
-            </div>
-            
-        </div>
-        {% endfor %}
+  <section class="cards">
 
-    </section>
+    {% for recipe in recipes %}    
+    <div class="card" id="{{recipe.id}}">
 
-    <div class="pagination" data-page="{{pagination.page}}" data-total="{{pagination.total}}" data-filter="{{filter}}"></div>
+      <div class="card_image">
+        <img src="{{recipe.image}}" alt="Imagem de {{recipe.title}}">
+      </div>
+      <div class="card_title">
+        <p>{{recipe.title}}</p>
+      </div>
+      <div class="card_chef">
+        <p>por {{recipe.chef_name}}</p>
+      </div>
 
-    <script src="/js/paginate.js"></script>
-    <script src="/js/recipePage.js"></script>
+    </div>
+    {% endfor %}
+
+  </section>
+
+  <div class="pagination" 
+    data-page={{pagination.page}}
+    data-total={{pagination.total}}
+    data-filter={{filter}}
+  ></div>
+
+  <script src="/js/paginate.js"></script>
+  <script src="/js/recipePage.js"></script>
 {% endblock %}

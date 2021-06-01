@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS foodfyfinaldb;
-CREATE DATABASE foodfyfinaldb;
+DROP DATABASE IF EXISTS foodfydb;
+CREATE DATABASE foodfydb;
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
@@ -45,18 +45,6 @@ CREATE TABLE "recipe_files" (
   "file_id" INTEGER REFERENCES "files" (id) ON DELETE CASCADE
 );
 
--- foreign key for recipes - chefs
--- ALTER TABLE "recipes" ADD FOREIGN KEY ("chef_id") REFERENCES "chefs" ("id");
-
--- foreign key for recipes - users
--- ALTER TABLE "recipes" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
--- ALTER TABLE "recipe_files" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id");
-
--- ALTER TABLE "recipe_files" ADD FOREIGN KEY ("file_id") REFERENCES "files" ("id");
-
--- ALTER TABLE "chefs" ADD FOREIGN KEY ("file_id") REFERENCES "files" ("id");
-
 -- create procedure => vai atualizar os campos de update_at automaticamente no banco
 CREATE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
@@ -94,10 +82,6 @@ WITH (OIDS=FALSE);
 ALTER TABLE "session" 
 ADD CONSTRAINT "session_pkey" 
 PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
-
--- token password recovery
-ALTER TABLE "users" ADD COLUMN reset_token text;
-ALTER TABLE "users" ADD COLUMN reset_token_expires text;
 
 -- to run seeds
 DELETE FROM recipe_files;

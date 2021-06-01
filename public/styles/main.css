@@ -1,42 +1,42 @@
 @import "https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap";
 
 :root {
-    --color-main: #111;
+  --color-main: #111;
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    box-sizing: border-box;
-    list-style-type: '- ';
-    outline: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+  list-style-type: '- ';
+  outline: none;
 }
 
 html, body {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    color: var(--color-main);
+  font-family: 'Roboto', sans-serif;
+  color: var(--color-main);
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-container {
-    flex: 1;
+  flex: 1;
 }
 
 .header-container, .container {
-    max-width: 940px;
-    width: 100%;
-    margin: 0 auto;
+  max-width: 940px;
+  width: 100%;
+  margin: 0 auto;
 
 }
 
 .container {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
