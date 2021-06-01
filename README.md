@@ -45,7 +45,7 @@ Ex:
 http://localhost:3000/admin/users/login
 ```
 
-Além popular as receitas no site, a seed irá criar usuários admin e usuários comum. Para facilitar o acesso, basta pegar um email de um usuário admin que a seed criou e no momento de realizar login selecionar a opção "Perdeu a senha?"
+Além de popular as receitas no site, a seed irá criar usuários admin e usuários comum. Para facilitar o acesso, basta pegar um email de um usuário admin que a seed criou e no momento de realizar login selecionar a opção "Perdeu a senha?"
 
 ⚠️ Atenção
 Por favor, ao utilizar a aplicação, efetue o login como usuário administrativo e também como usuário comum. Existem funcionalidades específicas e botões permaneceram ocultos quando um usuário admin/comum estiver logado.
