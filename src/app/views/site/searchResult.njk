@@ -14,8 +14,7 @@
             type="text" 
             name="filter" 
             placeholder="Buscar uma receita"
-            value="{{ filter }}"
-            required
+            value={{search.term}}
         >
         <button type="submit">Filtrar</button>
     </form>          
@@ -26,7 +25,7 @@
 <div class="container">
     
     <div class="page-header">
-        <h2>Buscando por "{{filter}}"</h2>
+        <h2>Buscando por "{{search.term}}"</h2>
     </div>
 
     <section class="cards">

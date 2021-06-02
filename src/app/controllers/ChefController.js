@@ -3,180 +3,172 @@ const { unlinkSync} = require('fs')
 
 const Chef = require('../models/Chef')
 const File = require('../models/File')
-const Recipe = require('../models/Recipe')
 
 const LoadChefService = require('../services/LoadChefService')
 const LoadRecipeService = require('../services/LoadRecipeService')
 
 module.exports = {
-    async index(req, res) {
+  async index(req, res) {
+    try {
+      let { page, limit } = req.query
 
-        try {
-            let { page, limit } = req.query
+      page = page || 1
+      limit = limit || 8
 
-            page = page || 1
-            limit = limit || 8
+      let offset = limit * (page - 1)
 
-            let offset = limit * (page - 1)
+      let chefs = await Chef.paginate({ limit, offset })
+      
+      const chefsPromise = chefs.map(LoadChefService.format)
 
-            let chefs = await Chef.paginate({ limit, offset })
-            
-            const chefsPromise = chefs.map(LoadChefService.format)
+      chefs = await Promise.all(chefsPromise)
 
-            chefs = await Promise.all(chefsPromise)
+      if (chefs === "") {
+        const pagination = { page }
 
-            if (chefs === "") {
-                const pagination = { page }
+        return res.render('admin/chefs/index', { chefs, pagination })
+      }
+      
+      const pagination = {
+        total: Math.ceil(chefs[0].total/limit),
+        page
+      }
+      
+      return res.render('admin/chefs/index', { chefs, pagination })
 
-                return res.render('admin/chefs/index', { chefs, pagination })
-            }
-            
-            const pagination = {
-                total: Math.ceil(chefs[0].total/limit),
-                page
-            }
-            
-            return res.render('admin/chefs/index', { chefs, pagination })
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  create(req, res) {
+  
+    return res.render('admin/chefs/create')
+  },
+  async post(req, res) {
+    try {
+      // Create image first
+      const files = req.files
 
-        } catch (error) {
-            console.error(error)
-        }
+      const fileId = await Promise.all(files.map(file => File.create({
+        name: file.filename,
+        path: file.path
+      })))    
 
-    },
-    create(req, res) {
-    
-        return res.render('admin/chefs/create')
-    },
-    async post(req, res) {
+      // Create chef and get file_id
+      const chef = await Chef.create({
+        name: req.body.name,
+        file_id: fileId[0],
+        created_at: date(Date.now()).iso
+      })
 
-        try {
-            // Create image first
-            const files = req.files
+      
+      return res.redirect(`/admin/chefs/${chef}`)
 
-            const fileId = await Promise.all(files.map(file => File.create({
-                name: file.filename,
-                path: file.path
-            })))    
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  async show(req, res) {
+    try {
+      const chef = await LoadChefService.load("chef", { where: { id: req.params.id }})
 
-            // Create chef and get file_id
-            const chef = await Chef.create({
-               name: req.body.name,
-               file_id: fileId[0],
-               created_at: date(Date.now()).iso
-            })
+      const chefRecipes = await LoadRecipeService.load("recipes", { where: { chef_id: req.params.id }})
 
-            
-            return res.redirect(`/admin/chefs/${chef}`)
+      return res.render("admin/chefs/show", { chef, chefRecipes })
 
-        } catch (error) {
-            console.error(error)
-        }
-    },
-    async show(req, res) {
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  async edit(req, res) {
+    try {
+      const chef = await LoadChefService.load("chef", {where: { id: req.params.id}})
 
-        try {
-            const chef = await LoadChefService.load("chef", { where: { id: req.params.id }})
+      return res.render("admin/chefs/edit", { chef })
 
-            const chefRecipes = await LoadRecipeService.load("recipes", { where: { chef_id: req.params.id }})
+    } catch (error) {
+      console.error(error) 
+    }
+  },
+  async put(req, res) {
+    const chef = await Chef.findOne({ where: { id: req.body.id }})
 
-            return res.render("admin/chefs/show", { chef, chefRecipes })
+    try {
+      const files = req.files
 
-        } catch (error) {
-            console.error(error)
-        }
-    },
-    async edit(req, res) {
+      async function deleteFileById(id) {
+        const file = await File.findOne({ where: { id }})
 
-        try {
-            const chef = await LoadChefService.load("chef", {where: { id: req.params.id}})
+        unlinkSync(file.path)
 
-            return res.render("admin/chefs/edit", { chef })
+        await File.delete(id)
+      }
 
-        } catch (error) {
-            console.error(error) 
-        }
-    },
-    async put(req, res) {
+      // get new image
+      if (files.length !== 0) {
+        const fileId = await Promise.all(files.map(file => File.create({
+            name: file.filename,
+            path: file.path
+        })))
 
-        const chef = await Chef.findOne({ where: { id: req.body.id }})
+        await Chef.update(req.body.id, {
+            name: req.body.name,
+            file_id: fileId[0]
+        })
 
-        try {
-            const files = req.files
+        // delete previous image
+        await deleteFileById(chef.file_id)
+      }
 
-            async function deleteFileById(id) {
-                const file = await File.findOne({ where: { id }})
+      // update without new image
+      await Chef.update(req.body.id, {
+        name: req.body.name,
+      })
 
-                unlinkSync(file.path)
+      // remove photo from db
+      if (req.body.removed_files) {
+        // 1,
+        const removedFiles = req.body.removed_files.split(",") // [1,]
 
-                await File.delete(id)
-            }
+        const file_id = removedFiles[0]
 
-            // get new image
-            if (files.length !== 0) {
-                const fileId = await Promise.all(files.map(file => File.create({
-                    name: file.filename,
-                    path: file.path
-                })))
+        await deleteFileById(file_id)
+      }
 
-                await Chef.update(req.body.id, {
-                    name: req.body.name,
-                    file_id: fileId[0]
-                })
+      return res.redirect(`/admin/chefs/${req.body.id}`)
 
-                // delete previous image
-                await deleteFileById(chef.file_id)
-            }
+    } catch (error) {
+      console.error(error);          
+    }
+  },
+  async delete(req, res) {
+    try {
+      // find chef
+      const chef = await Chef.findOne({ where: { id: req.body.id }})
 
-            // update without new image
-            await Chef.update(req.body.id, {
-                name: req.body.name,
-            })
+      // get image of chef
+      const chefFile = await Chef.files(chef.id)
 
-            // remove photo from db
-            if (req.body.removed_files) {
-                // 1,
-                const removedFiles = req.body.removed_files.split(",") // [1,]
+      // can't delete if chef has recipes registered
+      if (chef.totalRecipes >= 1) {
+      
+        return res.send('Chefs que possuem receitas não podem ser deletados')
+      } else {
 
-                const file_id = removedFiles[0]
+        // remove chef
+        await Chef.delete(req.body.id)
 
-                await deleteFileById(file_id)
-            }
-
-            return res.redirect(`/admin/chefs/${req.body.id}`)
-
-        } catch (error) {
-            console.error(error);          
-        }
-    },
-    async delete(req, res) {
-
-        try {
-            // find chef
-            const chef = await Chef.findOne({ where: { id: req.body.id }})
-
-            // get image of chef
-            const chefFile = await Chef.files(chef.id)
-
-            // can't delete if chef has recipes registered
-            if (chef.totalRecipes >= 1) {
-                
-                return res.send('Chefs que possuem receitas não podem ser deletados')
-            } else {
-
-                // remove chef
-                await Chef.delete(req.body.id)
-
-                // remove image from public
-                unlinkSync(chefFile[0].path)
-                
-                // remove image from db
-                await File.delete(chefFile[0].file_id)
+        // remove image from public
+        unlinkSync(chefFile[0].path)
+        
+        // remove image from db
+        await File.delete(chefFile[0].file_id)
 
 
-                return res.redirect(`/admin/chefs`)
-            }
-        } catch (error) {
-            console.error(error)   
-        }
-    },
+        return res.redirect(`/admin/chefs`)
+      }
+    } catch (error) {
+      console.error(error)   
+    }
+  },
 }

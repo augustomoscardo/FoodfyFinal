@@ -22,15 +22,15 @@ async function createUser() {
     while (users.length < totalUsers) {
       users.push({
         name: faker.name.firstName(),
-        email: faker.internet.email(),
+        email: faker.internet.email().toLocaleLowerCase(),
         is_admin: faker.random.boolean(),
         password,
       })
+    }  
 
-    }   
     const usersPromise = users.map(user => User.create(user))
 
-  usersIds = await Promise.all(usersPromise)
+    usersIds = await Promise.all(usersPromise)
 
   } catch (error) {
     console.error(error);
@@ -39,29 +39,32 @@ async function createUser() {
 
 async function createChef() { 
   try {
-    // first create file   
+    // first create file.   
     let files = []
 
-    while (files.length < totalChefs) {
+    // for each chef will be assigned one file_id
+    const c = [...new Array(totalChefs)]
+
+    c.forEach((_, index) => {
       files.push({
         name: faker.image.image(),
-        path: `public/img/placeholder.png`
+        path: `public/img/chefs/${index + 1}.jpg`
       })
-    }
+    })
+
     const filesPromise = files.map(file => File.create(file))
 
-    const [fileId] = await Promise.all(filesPromise)
+    const fileIds = await Promise.all(filesPromise)
 
     // create chef
     let chefs = []
 
-    while (chefs.length < totalChefs) {
+    fileIds.forEach(fileId => {
       chefs.push({
         name: faker.name.firstName(),
         file_id: fileId
       })
-    }
-
+    });
     const chefsPromise = chefs.map(chef => Chef.create(chef))
 
     chefsIds = await Promise.all(chefsPromise)
@@ -106,7 +109,6 @@ async function createRecipe() {
         files.push({
           name: faker.image.image(),
           path: `public/img/placeholder.png`,
-          // recipe_id: recipesIds[Math.floor(Math.random() * totalRecipes)]
           recipe_id: id
         })
       })

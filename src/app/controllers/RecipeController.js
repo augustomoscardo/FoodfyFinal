@@ -39,8 +39,7 @@ module.exports = {
 				total: Math.ceil(recipes[0].total/limit),
 				page
 			}
-console.log(recipes);
-console.log(pagination);			
+		
 			return res.render('admin/recipes/index', { recipes, pagination })
 			
 		} catch (error) {

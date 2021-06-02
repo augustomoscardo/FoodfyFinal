@@ -39,7 +39,8 @@
 
     </div>
 
-    <div class="bottom">
+    {% if recipes.length %}
+        <div class="bottom">
     
         <h2>Mais acessadas</h2>
         <section class="cards">
@@ -62,6 +63,7 @@
             
         </section>
     </div>
+    {% endif %}
 
     <div class="modal-overlay">                
                 

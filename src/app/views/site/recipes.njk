@@ -7,22 +7,24 @@
 
 {% endblock %}
 
-{% block headerContent %} 
-<div class="form-filter">
-  <form action="/searchResult" method="get">
-      <input 
-        type="text" 
-        name="filter" 
-        placeholder="Buscar uma receita"
-        value={{filter}}
-        required
-      >
-      <button type="submit">Filtrar</button>
-  </form>          
-</div>
-{% endblock %}
+{% if recipes %}
+  {% block headerContent %} 
+  <div class="form-filter">
+    <form action="/searchResult" method="get">
+        <input 
+          type="text" 
+          name="filter" 
+          placeholder="Buscar uma receita"
+          value={{filter}}
+        >
+        <button type="submit">Filtrar</button>
+    </form>          
+  </div>
+  {% endblock %}
+{% endif %}
 
 {% block content %}
+  {% if recipes %}
 
   <section class="cards">
 
@@ -52,4 +54,7 @@
 
   <script src="/js/paginate.js"></script>
   <script src="/js/recipePage.js"></script>
+  {% else %}
+  <h2>Não há receitas cadastradas no momento.</h2>
+  {% endif %}
 {% endblock %}

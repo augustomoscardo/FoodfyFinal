@@ -42,7 +42,7 @@ module.exports = {
             const query = `
                 SELECT recipes.*, 
                 chefs.name AS chef_name,
-                (SELECT count(*) FROM recipes) AS total
+                (SELECT count(*) FROM recipes WHERE user_id = ${id}) AS total
                 FROM recipes
                 LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
                 LEFT JOIN users ON (users.id = recipes.user_id)
