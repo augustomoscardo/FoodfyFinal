@@ -6,7 +6,7 @@ Base.init({ table: 'chefs' })
 
 module.exports = {
     ...Base,
-    async files(id) { // é o mesmo que o File.find()
+    async files(id) { // same method from File.find()
         try {
             const query = `SELECT * FROM files 
             LEFT JOIN chefs ON (chefs.file_id = files.id)

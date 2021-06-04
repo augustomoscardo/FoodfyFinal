@@ -42,7 +42,7 @@ async function createChef() {
     // first create file.   
     let files = []
 
-    // for each chef will be assigned one file_id
+    // for each chef(c) will be assigned one file_id
     const c = [...new Array(totalChefs)]
 
     c.forEach((_, index) => {

@@ -84,7 +84,7 @@ async function AdminDeletesOwnAccount(req, res, next) {
 
     const user = await User.findOne({ where: { id } })
 
-    if (userId == id) {  // verificar se id do user da sessão é igual ao id do user do body
+    if (userId == id) {  // check if session user id is the same a req.body user id
         return res.render('admin/users/index', {
             user,
             error: "Desculpe! Você não pode deletar sua própria conta."
